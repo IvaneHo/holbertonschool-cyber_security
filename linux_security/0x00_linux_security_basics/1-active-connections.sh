@@ -1,2 +1,2 @@
 #!/bin/bash
-sudo ss -tunaep
+sudo ss -tanp -i any
