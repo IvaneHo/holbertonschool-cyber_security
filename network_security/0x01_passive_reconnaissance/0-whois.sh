@@ -1,2 +1,2 @@
 #!/bin/bash
-whois $1 | awk -F': ' '/Registrant|Admin|Tech/ {gsub(/^ +| +$/,"",$2); sub(/Street/,"Street "); sub(/Ext$/,"Ext:"); printf("%s,%s\n",$1,$2)}' > "$1.csv"
+whois $1 | awk -F': ' '/Registrant|Admin|Tech/ {key=$1; val=$2; if($1 ~ /Street/){val=val" "}; if($1 ~ /Ext$/){sub(/Ext$/,"Ext:",key); if(val=="")val=""}; printf("%s,%s\n",key,val)}' > "$1.csv"
