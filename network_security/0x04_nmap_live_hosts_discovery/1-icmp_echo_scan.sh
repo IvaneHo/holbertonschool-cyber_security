@@ -1,2 +1,2 @@
 #!/bin/bash
-nmap -sn -PE $1
+sudonmap -sn -PE $1
