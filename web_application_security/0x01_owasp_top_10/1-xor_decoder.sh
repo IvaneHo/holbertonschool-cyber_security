@@ -1,17 +1,15 @@
 #!/bin/bash
-# Decode XOR WebSphere encoded password
-# Usage: ./1-xor_decoder.sh {xor}ENCODED_VALUE
+
+hash="$1"
+encoded="${hash#\{xor\}}"
+decoded=$(echo "$encoded" | base64 -d)
 
 result=""
-
-decoding=$(echo "$1" | sed 's/{xor}//g' | base64 --decode)
-hex_stream=$(echo "$decoding" | tr -d '\n' | od -An -tx1 | tr -dc '[[:alnum:]]')
-size=${#hex_stream}
-
-for (( i=0; i<size; i+=2 ))
-do
-	byte=$((16#${hex_stream:i:2} ^ 95))
-	result+=$(printf '\\x%x' "$byte")
+for ((i=0; i<${#decoded}; i++)); do
+    char="${decoded:$i:1}"
+    ascii=$(printf "%d" "'$char")
+    xor_result=$((ascii ^ 95))
+    result+=$(printf "\\$(printf '%o' $xor_result)")
 done
 
 echo -e "$result"
